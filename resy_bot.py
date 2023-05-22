@@ -5,8 +5,11 @@ import logging
 from time import sleep
 from auth import email, password
 from datetime import datetime
+from datetime import timedelta
 
-RESTAURANT_URL = "https://resy.com/cities/ny/don-angie?date=2023-05-21&seats=4"
+now = datetime.now()
+now_and_week = now + timedelta(days=7)
+RESTAURANT_URL = f"https://resy.com/cities/ny/don-angie?date={now_and_week.year}-{now_and_week.month:02}-{now_and_week.day:02}&seats=4"
 
 driver = webdriver.Firefox()
 driver.get(RESTAURANT_URL)
@@ -49,10 +52,9 @@ login_buttons[0].click()
 sleep(2)
 
 # Wait till 9:00 AM 
-now_time = datetime.now()
-opening_timestamp = now_time.replace(hour=9, minute=0, second=0, microsecond=0).timestamp()
-now_timestamp = now_time.timestamp()
-time_delta = opening_timestamp - now_timestamp
+opening_timestamp = now.replace(hour=9, minute=0, second=0, microsecond=0).timestamp()
+nowstamp = now.timestamp()
+time_delta = opening_timestamp - nowstamp
 if time_delta < 0: 
     raise Exception("Opening time was in the past!")
 sleep(time_delta)
